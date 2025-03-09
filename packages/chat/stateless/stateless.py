@@ -23,8 +23,9 @@ def stream(args, lines):
         #print(line, end='')     
         #TODO:E2.2 fix this streaming implementation
         # line is a json string and you have to extract only the "response" field
-        msg = {"output": line.decode("utf-8")}
-        out += str(line)
+        dec = json.loads(line.decode("utf-8")).get("response", "")
+        msg = {"output": dec}
+        out += dec
         #END TODO
         s.sendall(json.dumps(msg).encode("utf-8"))
     except Exception as e:
@@ -41,6 +42,10 @@ def stateless(args):
     #TODO:E2.3 
     # add if to switch to llama3.1:8b or deepseek-r1:32b
     # on input 'llmama' or 'deepseek' and change the inp to "who are you"
+    if inp == 'llama':
+      inp = 'llama3.1:8b'
+    elif inp == 'deep':
+      inp = 'deepseek-r1:32b'
     #END TODO
     msg = { "model": MODEL, "prompt": inp, "stream": True }
     lines = req.post(llm, json=msg, stream=True).iter_lines()

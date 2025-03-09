@@ -1,4 +1,6 @@
 #--web true
+#--param OLLAMA_HOST $OLLAMA_HOST
+#--param AUTH $AUTH
 
 import time
 def count_to_zero(n):
