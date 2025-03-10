@@ -2,6 +2,33 @@ import re, os, requests as req
 #MODEL = "llama3.1:8b"
 MODEL = "phi4:14b"
 
+FORM = [
+  {
+    "name": "queen",
+    "label": "With a queen",
+    "required": "false",
+    "type": "checkbox"
+  },
+  {
+    "name": "rook",
+    "label": "With a rook",
+    "required": "false",
+    "type": "checkbox"
+  },
+  {
+    "name": "knight",
+    "label": "With a knight",
+    "required": "false",
+    "type": "checkbox"
+  },
+  {
+    "name": "bishop",
+    "label": "With a bishop",
+    "required": "false",
+    "type": "checkbox"
+  }
+]
+
 def chat(args, inp):
   host = args.get("OLLAMA_HOST", os.getenv("OLLAMA_HOST"))
   auth = args.get("AUTH", os.getenv("AUTH"))
@@ -24,7 +51,10 @@ def puzzle(args):
   inp = args.get("input", "")
   res = {}
   if inp == "puzzle":
-    inp = "generate a chess puzzle in FEN format"
+    res['form'] = FORM
+  elif type(inp) is dict and "form" in inp:
+    data = inp["form"]
+    inp = "generate a chess puzzle in FEN format with " + ",".join([piece for piece in data])
     out = chat(args, inp)
     fen = extract_fen(out)
     if fen:
