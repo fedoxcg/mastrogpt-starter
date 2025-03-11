@@ -40,11 +40,12 @@ class Chat:
         res = self.client.chat.completions.create(
             model=MODEL,
             messages=self.messages,
+            stream=True
         )
         # END TODO
         try: 
             #TODO:E4.1 stream the result 
-            out = res.choices[0].message.content
+            out = res.choices[0].delta.content
             #END TODO
             self.add(f"assistant:{out}")
         except:
